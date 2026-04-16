@@ -8,16 +8,14 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
     private bool isLit;
 
     private SpriteRenderer sr;
-    //private Collider2D col;
+    private Collider2D col;
 
-    private void Start()
+    void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        //col = GetComponent<Collider2D>();
-
+        col = GetComponent<Collider2D>();
         sr.enabled = false;
-        gameObject.layer = LayerMask.NameToLayer("TargetObject");
-        //col.enabled = false;
+        col.isTrigger = true;
     }
 
     void Update()
@@ -35,14 +33,12 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
         if (timer > 0)
         {
             sr.enabled = true;
-            gameObject.layer = LayerMask.NameToLayer("Solid");
-            //col.enabled = true;
+            col.isTrigger = false;
         }
         else
         {
             sr.enabled = false;
-            gameObject.layer = LayerMask.NameToLayer("TargetObject");
-            //col.enabled = false;
+            col.isTrigger = true;
         }
     }
 

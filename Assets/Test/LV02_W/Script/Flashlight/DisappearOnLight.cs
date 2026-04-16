@@ -10,7 +10,7 @@ public class DisappearOnLight : MonoBehaviour, ILightReactive
     private SpriteRenderer sr;
     private Collider2D col;
 
-    private void Start()
+    void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
@@ -43,6 +43,7 @@ public class DisappearOnLight : MonoBehaviour, ILightReactive
     public void OnLightStay()
     {
         isLit = true;
+        Debug.Log("Light Detect Object");
     }
 
 }

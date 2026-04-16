@@ -2,66 +2,69 @@ using UnityEngine;
 
 public class FlashlightController : MonoBehaviour
 {
-    [Header("Light Settings")]
-    public float lightRadius;
-    public float lightAngle;
+    public float distance = 5f;
+    public float angle = 45f;
+    public int rayCount = 10;
     public LayerMask targetLayer;
 
-    [Header("References")]
-    public Transform lightOrigin;
-
-    private void Update()
+    void Update()
     {
         RotateToMouse();
-        DetectObjects();
+
+        if (Input.GetMouseButton(0))
+        {
+            ShootCone();
+        }
     }
 
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = mousePos - lightOrigin.position;
+        Vector2 dir = mousePos - transform.position;
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        float ang = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, ang);
     }
 
-    void DetectObjects()
+    void ShootCone()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
-            lightOrigin.position,
-            lightRadius,
-            targetLayer
-        );
+        float startAngle = -angle;
+        float step = (angle * 2) / rayCount;
 
-        foreach (var hit in hits)
+        for (int i = 0; i <= rayCount; i++)
         {
-            Vector2 directionToTarget = (hit.transform.position - transform.position).normalized;
+            float currentAngle = startAngle + step * i;
 
-            float angle = Vector2.Angle(transform.right, directionToTarget);
+            Vector2 dir = Quaternion.Euler(0, 0, currentAngle) * transform.right;
 
-            if (angle < lightAngle)
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, distance, targetLayer);
+
+            Debug.DrawRay(transform.position, dir * distance, Color.yellow);
+
+            if (hit.collider != null)
             {
-                ILightReactive reactive = hit.GetComponent<ILightReactive>();
-                if (reactive != null)
+                Debug.Log("Hit: " + hit.collider.name);
+
+                if (hit.collider.CompareTag("Appear"))
                 {
-                    reactive.OnLightStay();
+                    ILightReactive reactive = hit.collider.GetComponent<AppearOnLight>();
+
+                    if (reactive != null)
+                    {
+                        reactive.OnLightStay();
+                    }
+                }
+
+                else if (hit.collider.CompareTag("Disappear"))
+                {
+                    ILightReactive reactive = hit.collider.GetComponent<DisappearOnLight>();
+
+                    if (reactive != null)
+                    {
+                        reactive.OnLightStay();
+                    }
                 }
             }
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-
-        Vector3 origin = transform.position;
-
-        Gizmos.DrawWireSphere(origin, lightRadius);
-
-        Vector3 leftDir = Quaternion.Euler(0, 0, -lightAngle) * transform.right;
-        Vector3 rightDir = Quaternion.Euler(0, 0, lightAngle) * transform.right;
-
-        Gizmos.DrawRay(origin, leftDir * lightRadius);
-        Gizmos.DrawRay(origin, rightDir * lightRadius);
     }
 }
