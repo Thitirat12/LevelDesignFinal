@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Appear
   - Disappear
+  - Ground
   layers:
   - Default
   - TransparentFX
