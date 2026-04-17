@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,9 +11,17 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     [Header("Grounded")]
+    private Collider2D col;
     public Transform groundCheck;
     public Vector2 checkRadius;
     public LayerMask groundLayer;
+
+    [Header("Climb")]
+    public float climbSpeed = 3f;
+    private bool isClimbing;
+    private float verticalInput;
+
+
 
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -21,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -29,16 +38,22 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         HandleJump();
         Flip();
+
+        //rb.gravityScale = isClimbing ? 0f : 1f;
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
+
+        if (isClimbing)
+            HandleClimb();
     }
 
     void HandleInput()
     {
-        moveInput = Input.GetAxis("Horizontal");    
+        moveInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
     }
 
     void HandleMovement()
@@ -49,6 +64,8 @@ public class PlayerController : MonoBehaviour
     void HandleJump()
     {
         if (!Input.GetButtonDown("Jump")) return;
+
+        if (isClimbing) return;
 
         if (Input.GetButtonDown("Jump") && isGrounded && rb.linearVelocity.y <= 0)
         {
@@ -62,6 +79,14 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Already Jump");
         }
+    }
+
+    void HandleClimb()
+    {
+        rb.linearVelocity = new Vector2(
+        moveInput * moveSpeed,          // 👈 เดินซ้ายขวาได้
+        verticalInput * climbSpeed      // 👈 ปีนขึ้นลง
+    );
     }
 
     void CheckGround()
@@ -87,6 +112,27 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isClimbing = true;
+            rb.gravityScale = 0f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            //col.isTrigger = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isClimbing = false;
+            rb.gravityScale = 3f;
+            //col.isTrigger = false;
+        }
     }
 
     void OnDrawGizmosSelected()
