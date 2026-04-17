@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     [Header("Grounded")]
-    private Collider2D col;
+    //private Collider2D col;
     public Transform groundCheck;
     public Vector2 checkRadius;
     public LayerMask groundLayer;
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<Collider2D>();
+        //col = GetComponent<Collider2D>();
     }
 
     private void Update()
