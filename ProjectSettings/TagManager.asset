@@ -6,18 +6,20 @@ TagManager:
   tags:
   - Appear
   - Disappear
+  - Enemy
+  - HideZone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Hide
   - Water
   - UI
   - Ground
   - TargetObject
   - SolidObject
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 
