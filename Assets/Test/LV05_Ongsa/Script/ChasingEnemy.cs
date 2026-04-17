@@ -16,7 +16,8 @@ public class ChasingEnemy : MonoBehaviour
         if (col.gameObject.CompareTag("Player"))
         {
             Debug.Log("Game Over");
-            Time.timeScale = 0f;
+            FindObjectOfType<GameManager>().GameOver();
+
         }
     }
 }

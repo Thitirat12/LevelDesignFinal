@@ -6,8 +6,7 @@ public class DeathZone : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Debug.Log("Fall Death");
-            Time.timeScale = 0f;
+            FindObjectOfType<GameManager>().GameOver();
         }
     }
 }
