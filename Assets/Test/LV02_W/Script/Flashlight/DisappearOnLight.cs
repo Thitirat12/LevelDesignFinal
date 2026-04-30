@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class DisappearOnLight : MonoBehaviour, ILightReactive
 {
@@ -7,12 +8,12 @@ public class DisappearOnLight : MonoBehaviour, ILightReactive
     private float timer;
     private bool isLit;
 
-    private SpriteRenderer sr;
+    private TilemapRenderer tr;
     private Collider2D col;
 
     void Start()
     {
-        sr = GetComponent<SpriteRenderer>();
+        tr = GetComponent<TilemapRenderer>();
         col = GetComponent<Collider2D>();
     }
 
@@ -30,12 +31,12 @@ public class DisappearOnLight : MonoBehaviour, ILightReactive
 
         if (timer > 0)
         {
-            sr.enabled = false;
+            tr.enabled = false;
             col.enabled = false;
         }
         else
         {
-            sr.enabled = true;
+            tr.enabled = true;
             col.enabled = true;
         }
     }

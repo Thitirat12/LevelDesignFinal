@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class AppearOnLight : MonoBehaviour, ILightReactive
 {
@@ -9,12 +10,13 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
 
     private SpriteRenderer sr;
     private Collider2D col;
+    private TilemapRenderer tr;
 
     void Start()
     {
-        sr = GetComponent<SpriteRenderer>();
+        tr = GetComponent<TilemapRenderer>();
         col = GetComponent<Collider2D>();
-        sr.enabled = false;
+        tr.enabled = false;
         col.isTrigger = true;
     }
 
@@ -32,12 +34,12 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
 
         if (timer > 0)
         {
-            sr.enabled = true;
+            tr.enabled = true;
             col.isTrigger = false;
         }
         else
         {
-            sr.enabled = false;
+            tr.enabled = false;
             col.isTrigger = true;
         }
     }
