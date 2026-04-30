@@ -54,6 +54,15 @@ public class FlashlightController : MonoBehaviour
                         reactive.OnLightStay();
                     }
                 }
+                else if (hit.collider.CompareTag("Ladder"))
+                {
+                    ILightReactive reactive = hit.collider.GetComponent<AppearOnLight>();
+
+                    if (reactive != null)
+                    {
+                        reactive.OnLightStay();
+                    }
+                }
 
                 else if (hit.collider.CompareTag("Disappear"))
                 {

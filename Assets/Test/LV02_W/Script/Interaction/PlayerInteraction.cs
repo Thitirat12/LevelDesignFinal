@@ -17,7 +17,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void TryInteract()
     {
-        Vector2 dir = Vector2.right; // หรือ direction ตัวละคร
+        Vector2 dir = Vector2.right;
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, interactRange, interactLayer);
 

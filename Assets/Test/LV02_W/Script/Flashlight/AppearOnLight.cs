@@ -12,6 +12,8 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
     private Collider2D col;
     private TilemapRenderer tr;
 
+    public GameObject GameObject;
+
     void Start()
     {
         tr = GetComponent<TilemapRenderer>();
@@ -26,17 +28,25 @@ public class AppearOnLight : MonoBehaviour, ILightReactive
         {
             timer = appearTime;
             isLit = false;
-        }
+        }       
+
         else
         {
             timer -= Time.deltaTime;
         }
 
-        if (timer > 0)
+        if (timer > 0 && gameObject.CompareTag("Ladder"))
+        {
+            tr.enabled = true;
+            col.isTrigger = true;
+        }
+
+        else if (timer > 0)
         {
             tr.enabled = true;
             col.isTrigger = false;
         }
+
         else
         {
             tr.enabled = false;
