@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
@@ -126,6 +127,9 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Ladder"))
         {
+            TilemapRenderer tr = other.GetComponent<TilemapRenderer>();
+            if (tr == null || !tr.enabled) return;
+
             isClimbing = true;
             rb.gravityScale = 0f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
@@ -137,6 +141,9 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Ladder"))
         {
+            //TilemapRenderer tr = other.GetComponent<TilemapRenderer>();
+            //if (tr == null || !tr.enabled) return;
+
             isClimbing = false;
             rb.gravityScale = 3f;
             //col.isTrigger = false;

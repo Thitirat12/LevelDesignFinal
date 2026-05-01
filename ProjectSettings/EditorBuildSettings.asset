@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Test/LV02_W/Scene/LV03_Fake.unity
     guid: cef0ff62cc690564385a865d219f16e2
+  - enabled: 1
+    path: Assets/Test/LV05_Ongsa/Scene/LV5_Scene/LV5_Scene.unity
+    guid: d73b0d0e2a462974690ffd2423a9ebde
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
