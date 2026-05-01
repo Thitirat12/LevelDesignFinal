@@ -22,26 +22,28 @@ public class KeyPickup : MonoBehaviour
     {
         if (playerInZone && Input.GetKeyDown(KeyCode.F))
         {
-            ToggleState();
+            // 👉 เช็คก่อนว่าของครบมั้ย
+            if (GameManagerN.instance.IsComplete())
+            {
+                ToggleState();
+            }
+            else
+            {
+                Debug.Log("ของยังไม่ครบ!");
+            }
         }
     }
 
     void ToggleState()
     {
-        isActivated = !isActivated;
+        if (isActivated) return; // 👉 กันกดซ้ำ
 
-        if (isActivated)
-        {
-            // เปิด
-            sr.color = pickedColor;
-            door.OpenDoor();
-        }
-        else
-        {
-            // ปิด
-            sr.color = normalColor;
-            door.CloseDoor();
-        }
+        isActivated = true;
+
+        sr.color = pickedColor;
+        door.OpenDoor();
+
+        Debug.Log("เปิดประตูแล้ว!");
     }
 
     void OnTriggerEnter2D(Collider2D col)
