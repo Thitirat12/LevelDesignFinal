@@ -3581,8 +3581,9 @@ GameObject:
   - component: {fileID: 1079865503}
   - component: {fileID: 1079865502}
   - component: {fileID: 1079865501}
+  - component: {fileID: 1079865505}
   m_Layer: 0
-  m_Name: PORTAL BLUE-Sheet_0 (1)
+  m_Name: Portal_Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3730,6 +3731,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1079865505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079865500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4546904bd61b984bb9b5bd3ecd6a0c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PortalKana
+  sceneName: LV5_Scene
 --- !u!1 &1098417680
 GameObject:
   m_ObjectHideFlags: 0
