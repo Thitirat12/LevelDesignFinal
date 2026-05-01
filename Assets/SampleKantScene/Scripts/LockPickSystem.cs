@@ -19,10 +19,13 @@ public class LockPickSystem : MonoBehaviour
     public AudioClip unlockSfx;
     public GameObject lockpickUI;
     public GameObject objectToUnlock;
+    public GameObject[] objectsToDisableOnUnlock;
+    public Collider2D[] collidersToDisableOnUnlock;
     public GameObject enemyToDisable;
     public GameObject encounterClearObject;
     public float clearMessageDuration = 3f;
     public bool disableAfterUnlock = true;
+    public bool resetProgressOnFirstStart = true;
 
     public float skillCheckInterval = 3f;
     float timer;
@@ -35,6 +38,7 @@ public class LockPickSystem : MonoBehaviour
     float moveDirection = 1f;
     public float markerSpeed = 1.5f;
     bool encounterActive = false;
+    bool encounterStarted = false;
     bool movementLocked = false;
 
     public float ProgressNormalized => maxProgress <= 0f ? 0f : progress / maxProgress;
@@ -43,10 +47,12 @@ public class LockPickSystem : MonoBehaviour
     public float SuccessZoneSizeNormalized => successZone;
     public bool IsSkillCheckActive => canPress;
     public bool IsEncounterActive => encounterActive;
+    public int LastCancelFrame { get; private set; } = -1;
 
     void Start()
     {
         timer = skillCheckInterval;
+        AutoAssignMovementReferences();
         SetUIState(false);
     }
 
@@ -54,8 +60,13 @@ public class LockPickSystem : MonoBehaviour
     {
         if (!encounterActive) return;
 
-        HandleFacingOnlyInput();
-        movementLocked = canPress;
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            CancelLockpickEncounter();
+            return;
+        }
+
+        movementLocked = true;
         ToggleMovementComponent();
         LockPlayerMovement();
 
@@ -64,8 +75,6 @@ public class LockPickSystem : MonoBehaviour
             canPress = false;
             currentPos = 0f;
             moveDirection = 1f;
-            movementLocked = false;
-            ToggleMovementComponent();
             return;
         }
 
@@ -101,7 +110,18 @@ public class LockPickSystem : MonoBehaviour
 
     public void BeginLockpickEncounter()
     {
-        progress = 0f;
+        AutoAssignMovementReferences();
+
+        if (!encounterStarted)
+        {
+            if (resetProgressOnFirstStart)
+            {
+                progress = 0f;
+            }
+
+            encounterStarted = true;
+        }
+
         timer = skillCheckInterval;
         canPress = false;
         currentPos = 0f;
@@ -109,18 +129,41 @@ public class LockPickSystem : MonoBehaviour
         encounterActive = true;
         enabled = true;
         SetUIState(true);
+        SetMovementLock(true);
+    }
+
+    public void SetPlayer(Transform playerTransform)
+    {
+        player = playerTransform;
+        AutoAssignMovementReferences();
+    }
+
+    public void CancelLockpickEncounter()
+    {
+        encounterActive = false;
+        canPress = false;
+        currentPos = 0f;
+        moveDirection = 1f;
+        SetUIState(false);
         SetMovementLock(false);
+        LastCancelFrame = Time.frameCount;
+        Debug.Log("ยกเลิกสะเดาะกลอน");
     }
 
     public void OnPlayerCaught()
     {
         if (!encounterActive) return;
 
-        progress = Mathf.Max(progress - catchPenalty, 0f);
+        ReduceProgress(catchPenalty);
         canPress = false;
         timer = skillCheckInterval;
         currentPos = 0f;
         Debug.Log("โดนจับ! ความคืบหน้าลดลง");
+    }
+
+    public void ReduceProgress(float amount)
+    {
+        progress = Mathf.Max(progress - amount, 0f);
     }
 
     void TriggerSkillCheck()
@@ -172,6 +215,7 @@ public class LockPickSystem : MonoBehaviour
     void UnlockDoor()
     {
         encounterActive = false;
+        encounterStarted = false;
         canPress = false;
         SetUIState(false);
         SetMovementLock(false);
@@ -180,6 +224,12 @@ public class LockPickSystem : MonoBehaviour
         if (objectToUnlock != null && disableAfterUnlock)
         {
             objectToUnlock.SetActive(false);
+        }
+
+        if (disableAfterUnlock)
+        {
+            DisableUnlockObjects();
+            DisableUnlockColliders();
         }
 
         if (enemyToDisable != null)
@@ -195,6 +245,28 @@ public class LockPickSystem : MonoBehaviour
         }
 
         Debug.Log("ปลดล็อกสำเร็จ!");
+    }
+
+    void DisableUnlockObjects()
+    {
+        foreach (GameObject objectToDisable in objectsToDisableOnUnlock)
+        {
+            if (objectToDisable != null)
+            {
+                objectToDisable.SetActive(false);
+            }
+        }
+    }
+
+    void DisableUnlockColliders()
+    {
+        foreach (Collider2D colliderToDisable in collidersToDisableOnUnlock)
+        {
+            if (colliderToDisable != null)
+            {
+                colliderToDisable.enabled = false;
+            }
+        }
     }
 
     void SetUIState(bool isVisible)
@@ -242,6 +314,7 @@ public class LockPickSystem : MonoBehaviour
     void SetMovementLock(bool shouldLock)
     {
         movementLocked = shouldLock;
+        AutoAssignMovementReferences();
         ToggleMovementComponent();
 
         if (playerRigidbody != null)
@@ -255,6 +328,21 @@ public class LockPickSystem : MonoBehaviour
         if (movementComponent != null)
         {
             movementComponent.enabled = !movementLocked;
+        }
+    }
+
+    void AutoAssignMovementReferences()
+    {
+        if (player == null) return;
+
+        if (playerRigidbody == null)
+        {
+            playerRigidbody = player.GetComponent<Rigidbody2D>();
+        }
+
+        if (movementComponent == null)
+        {
+            movementComponent = player.GetComponent<ControllerPlayerKana>();
         }
     }
 
