@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private bool isClimbing;
     private float verticalInput;
 
-
+    public Transform flashlight;
 
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -112,6 +112,14 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+
+        // หมุน Flashlight counter ไม่ให้ถูก flip
+        if (flashlight != null)
+        {
+            Vector3 fScale = flashlight.localScale;
+            fScale.x *= -1;
+            flashlight.localScale = fScale;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

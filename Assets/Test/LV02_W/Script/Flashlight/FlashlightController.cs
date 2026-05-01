@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class FlashlightController : MonoBehaviour
 {
@@ -7,27 +8,40 @@ public class FlashlightController : MonoBehaviour
     public int rayCount = 10;
     public LayerMask targetLayer;
 
+    private Light2D flashlight;
+    //public Transform player;
+
+    public Vector3 offset = new Vector3(0, 0.5f, 0);
+
+    private void Start()
+    {
+        flashlight = GetComponentInChildren<Light2D>();
+    }
+
     void Update()
     {
+        //transform.position = player.position + offset;
+
         RotateToMouse();
 
-        if (Input.GetMouseButton(0))
-        {
-            ShootCone();
-        }
+        bool isOn = Input.GetMouseButton(0);
+        flashlight.enabled = isOn;
+
+        if (isOn) ShootCone();
     }
 
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 dir = mousePos - transform.position;
-
         float ang = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, ang);
     }
 
     void ShootCone()
     {
+        //Vector3 origin = player.position + offset;
+
         float startAngle = -angle;
         float step = (angle * 2) / rayCount;
 
