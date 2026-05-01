@@ -2,12 +2,14 @@
 
 public class PlayerCharacT : MonoBehaviour
 {
+    [Header("Movement")]
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
     public SpriteRenderer sr;
 
     float moveInput;
 
+    [Header("Hide System")]
     bool canHide = false;
     bool isHidden = false;
 
@@ -16,20 +18,25 @@ public class PlayerCharacT : MonoBehaviour
 
     float normalSpeed;
 
+    [Header("Health")]
+    public int maxHP = 3;
+    private int currentHP;
+
     void Start()
     {
         normalSpeed = moveSpeed;
+        currentHP = maxHP;
     }
 
     void Update()
     {
-        // 🔍 Debug: เช็คว่ากด F มั้ย
+        // 🔍 Debug
         if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("กด F แล้ว | canHide = " + canHide);
         }
 
-        // กด F เข้า/ออกแอบ
+        // 🔒 กด F แอบ
         if (canHide && Input.GetKeyDown(KeyCode.F))
         {
             isHidden = !isHidden;
@@ -41,18 +48,16 @@ public class PlayerCharacT : MonoBehaviour
                 moveSpeed = 0f;
                 moveInput = 0f;
                 rb.linearVelocity = Vector2.zero;
-
-                sr.sortingOrder = hideOrder; // 👻 ไปหลัง
+                sr.sortingOrder = hideOrder;
             }
             else
             {
                 moveSpeed = normalSpeed;
-
-                sr.sortingOrder = normalOrder; // 🔙 กลับหน้า
+                sr.sortingOrder = normalOrder;
             }
         }
 
-        // ถ้าแอบ = ห้ามขยับ
+        // 🚫 ถ้าแอบ = ไม่ขยับ
         if (isHidden)
         {
             moveInput = 0f;
@@ -86,6 +91,33 @@ public class PlayerCharacT : MonoBehaviour
         transform.localScale = scale;
     }
 
+    // 🔥 รับดาเมจ (ใช้กับ Enemy ได้เลย)
+    public void TakeDamage(int damage)
+    {
+        if (isHidden)
+        {
+            Debug.Log("หลบอยู่ → ไม่โดนดาเมจ 😏");
+            return;
+        }
+
+        currentHP -= damage;
+        Debug.Log("โดนดาเมจ! HP: " + currentHP);
+
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("ผู้เล่นตายแล้ว 💀");
+
+        // 👉 ใส่ระบบ Game Over
+        gameObject.SetActive(false);
+    }
+
+    // ===== Hide Zone =====
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("HideZone"))
@@ -109,5 +141,9 @@ public class PlayerCharacT : MonoBehaviour
                 sr.sortingOrder = normalOrder;
             }
         }
+    }
+    public bool IsHidden()
+    {
+        return isHidden;
     }
 }
