@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerCharacT : MonoBehaviour
 {
@@ -32,19 +33,21 @@ public class PlayerCharacT : MonoBehaviour
         cr = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
 
+        
         if (cr == null)
-            Debug.Log("return"); return;
+        {
+            Debug.LogError("ไม่มี Collider!");
+            return;
+        }
     }
 
     void Update()
     {
-        // 🔍 Debug
         if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("กด F แล้ว | canHide = " + canHide);
         }
 
-        // 🔒 กด F แอบ
         if (canHide && Input.GetKeyDown(KeyCode.F))
         {
             isHidden = !isHidden;
@@ -57,6 +60,7 @@ public class PlayerCharacT : MonoBehaviour
                 moveInput = 0f;
                 rb.linearVelocity = Vector2.zero;
                 sr.sortingOrder = hideOrder;
+
                 cr.isTrigger = true;
                 rb.bodyType = RigidbodyType2D.Kinematic;
             }
@@ -64,13 +68,12 @@ public class PlayerCharacT : MonoBehaviour
             {
                 moveSpeed = normalSpeed;
                 sr.sortingOrder = normalOrder;
+
                 cr.isTrigger = false;
                 rb.bodyType = RigidbodyType2D.Dynamic;
-                //rb.linearVelocity = Vector2.zero;
             }
         }
 
-        // 🚫 ถ้าแอบ = ไม่ขยับ
         if (isHidden)
         {
             moveInput = 0f;
@@ -104,7 +107,7 @@ public class PlayerCharacT : MonoBehaviour
         transform.localScale = scale;
     }
 
-    // 🔥 รับดาเมจ (ใช้กับ Enemy ได้เลย)
+    
     public void TakeDamage(int damage)
     {
         if (isHidden)
@@ -122,12 +125,17 @@ public class PlayerCharacT : MonoBehaviour
         }
     }
 
+    
     void Die()
     {
         Debug.Log("ผู้เล่นตายแล้ว 💀");
 
-        // 👉 ใส่ระบบ Game Over
-        gameObject.SetActive(false);
+        Invoke(nameof(RestartScene), 1f); 
+    }
+
+    void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // ===== Hide Zone =====
@@ -155,6 +163,7 @@ public class PlayerCharacT : MonoBehaviour
             }
         }
     }
+
     public bool IsHidden()
     {
         return isHidden;

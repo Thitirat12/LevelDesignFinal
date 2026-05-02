@@ -506,7 +506,7 @@ GameObject:
   m_Layer: 0
   m_Name: Point3
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   progressBar: {fileID: 91712275}
   progressUI: {fileID: 1897288762}
   searchTime: 3
-  itemPopupPrefab: {fileID: 7792044994599410556, guid: 441f07baaf04cd94999a6072bc7472c9, type: 3}
+  itemPopupPrefab: {fileID: 0}
   spawnPoint: {fileID: 38055184}
 --- !u!61 &233117434
 BoxCollider2D:
@@ -10598,7 +10598,7 @@ GameObject:
   m_Layer: 0
   m_Name: Point2
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -10632,7 +10632,7 @@ MonoBehaviour:
   progressBar: {fileID: 91712275}
   progressUI: {fileID: 1897288762}
   searchTime: 3
-  itemPopupPrefab: {fileID: 0}
+  itemPopupPrefab: {fileID: 7792044994599410556, guid: 441f07baaf04cd94999a6072bc7472c9, type: 3}
   spawnPoint: {fileID: 1322434594}
 --- !u!61 &1318141086
 BoxCollider2D:

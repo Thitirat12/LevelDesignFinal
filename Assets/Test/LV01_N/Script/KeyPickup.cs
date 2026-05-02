@@ -36,7 +36,7 @@ public class KeyPickup : MonoBehaviour
 
     void ToggleState()
     {
-        if (isActivated) return; // 👉 กันกดซ้ำ
+        if (isActivated) return; 
 
         isActivated = true;
 
